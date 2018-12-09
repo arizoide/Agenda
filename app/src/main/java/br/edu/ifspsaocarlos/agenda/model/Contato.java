@@ -7,6 +7,7 @@ public class Contato implements Serializable {
     private long id;
     private String nome;
     private String fone;
+    private String foneAdicional;
     private String email;
     private boolean favorito;
 
@@ -51,6 +52,14 @@ public class Contato implements Serializable {
 
     public void setFavorito(boolean favorito) {
         this.favorito = favorito;
+    }
+
+    public String getFoneAdicional() {
+        return foneAdicional;
+    }
+
+    public void setFoneAdicional(String foneAdicional) {
+        this.foneAdicional = foneAdicional;
     }
 }
 

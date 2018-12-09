@@ -12,11 +12,13 @@ class SQLiteHelper extends SQLiteOpenHelper {
     static final String KEY_FONE = "fone";
     static final String KEY_EMAIL = "email";
     static final String KEY_FAVORITO = "favorito";
-    private static final int DATABASE_VERSION = 2;
+    static final String KEY_FONE_ADICIONAL = "foneAdicional";
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_CREATE = "CREATE TABLE "+ DATABASE_TABLE +" (" +
             KEY_ID  +  " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             KEY_NAME + " TEXT NOT NULL, " +
             KEY_FONE + " TEXT, "  +
+            KEY_FONE_ADICIONAL+ " TEXT, "  +
             KEY_EMAIL + " TEXT, " +
             KEY_FAVORITO + " INTEGER);";
 
@@ -37,6 +39,11 @@ class SQLiteHelper extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             values.put(SQLiteHelper.KEY_FAVORITO, Boolean.FALSE);
             database.update(SQLiteHelper.DATABASE_TABLE, values, null, null);
+        }
+
+        if(oldVersion < 3) {
+            String sql= "ALTER TABLE " + DATABASE_TABLE + " ADD COLUMN " + KEY_FONE_ADICIONAL + " TEXT";
+            database.execSQL(sql);
         }
     }
 }
