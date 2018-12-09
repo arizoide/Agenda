@@ -39,6 +39,8 @@ public class DetalheActivity extends AppCompatActivity {
             emailText.setText(c.getEmail());
             EditText emailTextAdicional = (EditText)findViewById(R.id.editTextEmailAdicional);
             emailTextAdicional.setText(c.getEmailAdicional());
+            EditText aniversarioText = (EditText)findViewById(R.id.editTextAniversario);
+            aniversarioText.setText(c.getAniversario());
             int pos =c.getNome().indexOf(" ");
             if (pos==-1)
                 pos=c.getNome().length();
@@ -89,6 +91,7 @@ public class DetalheActivity extends AppCompatActivity {
         String foneAdicional = ((EditText) findViewById(R.id.editTextFoneAdicional)).getText().toString();
         String emailAdicional = ((EditText) findViewById(R.id.editTextEmailAdicional)).getText().toString();
         String email = ((EditText) findViewById(R.id.editTextEmail)).getText().toString();
+        String aniversario = ((EditText) findViewById(R.id.editTextAniversario)).getText().toString();
 
         if (c==null)
             c = new Contato();
@@ -99,6 +102,7 @@ public class DetalheActivity extends AppCompatActivity {
         c.setFoneAdicional(foneAdicional);
         c.setEmail(email);
         c.setEmailAdicional(emailAdicional);
+        c.setAniversario(aniversario);
 
         cDAO.salvaContato(c);
         Intent resultIntent = new Intent();

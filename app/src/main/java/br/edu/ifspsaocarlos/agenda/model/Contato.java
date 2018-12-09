@@ -10,6 +10,7 @@ public class Contato implements Serializable {
     private String foneAdicional;
     private String email;
     private String emailAdicional;
+    private String aniversario;
     private boolean favorito;
 
     public Contato() {
@@ -69,6 +70,14 @@ public class Contato implements Serializable {
 
     public void setEmailAdicional(String emailAdicional) {
         this.emailAdicional = emailAdicional;
+    }
+
+    public String getAniversario() {
+        return aniversario;
+    }
+
+    public void setAniversario(String aniversario) {
+        this.aniversario = aniversario;
     }
 }
 
