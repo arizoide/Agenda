@@ -38,7 +38,7 @@ public class DetalheActivity extends AppCompatActivity {
             EditText emailText = (EditText)findViewById(R.id.editTextEmail);
             emailText.setText(c.getEmail());
             EditText emailTextAdicional = (EditText)findViewById(R.id.editTextEmailAdicional);
-            emailTextAdicional.setText(c.getEmail());
+            emailTextAdicional.setText(c.getEmailAdicional());
             int pos =c.getNome().indexOf(" ");
             if (pos==-1)
                 pos=c.getNome().length();
