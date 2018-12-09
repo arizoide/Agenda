@@ -93,8 +93,6 @@ public class DetalheActivity extends AppCompatActivity {
         c.setEmail(email);
 
         cDAO.salvaContato(c);
-        //c.setId(10);
-        //ContatoAdapter.Adiciona(c);
         Intent resultIntent = new Intent();
         setResult(RESULT_OK,resultIntent);
         finish();

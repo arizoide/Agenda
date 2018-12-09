@@ -20,6 +20,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,9 +35,9 @@ import br.edu.ifspsaocarlos.agenda.data.ContatoDAO;
 import br.edu.ifspsaocarlos.agenda.model.Contato;
 
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
-    private ContatoDAO cDAO ;
+    private ContatoDAO cDAO;
     private RecyclerView recyclerView;
 
     private List<Contato> contatos = new ArrayList<>();
@@ -82,11 +83,11 @@ public class MainActivity extends AppCompatActivity{
         Intent intent = getIntent();
         handleIntent(intent);
 
-        cDAO= new ContatoDAO(this);
+        cDAO = new ContatoDAO(this);
 
-        empty= (TextView) findViewById(R.id.empty_view);
+        empty = (TextView) findViewById(R.id.empty_view);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity{
 
         setupRecyclerView();
 
-        fab = (FloatingActionButton)findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,13 +118,13 @@ public class MainActivity extends AppCompatActivity{
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView = (SearchView) menu.findItem(R.id.pesqContato).getActionView();
 
-        ImageView closeButton = (ImageView)searchView.findViewById(R.id.search_close_btn);
+        ImageView closeButton = (ImageView) searchView.findViewById(R.id.search_close_btn);
 
 
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText et = (EditText)findViewById(R.id.search_src_text);
+                EditText et = (EditText) findViewById(R.id.search_src_text);
                 if (et.getText().toString().isEmpty())
                     searchView.onActionViewCollapsed();
 
@@ -131,7 +132,6 @@ public class MainActivity extends AppCompatActivity{
                 updateUI(null);
             }
         });
-
 
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -142,51 +142,57 @@ public class MainActivity extends AppCompatActivity{
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.pesqFavoritos:
+                List<Contato> result = cDAO.buscarFavoritos();
+                if (result.size() > 0) {
+                    contatos.clear();
+                    contatos.addAll(result);
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                } else {
+                    showSnackBar("Sem favoritos");
+                }
+                return true;
+        }
+        return false;
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1)
             if (resultCode == RESULT_OK) {
                 showSnackBar(getResources().getString(R.string.contato_adicionado));
-             //   adapter.notifyItemInserted(adapter.getItemCount());
                 updateUI(null);
             }
-
-
 
         if (requestCode == 2) {
             if (resultCode == RESULT_OK)
                 showSnackBar(getResources().getString(R.string.contato_alterado));
             if (resultCode == 3)
                 showSnackBar(getResources().getString(R.string.contato_apagado));
-
-
-
             updateUI(null);
         }
     }
 
     private void showSnackBar(String msg) {
-        CoordinatorLayout coordinatorlayout= (CoordinatorLayout)findViewById(R.id.coordlayout);
+        CoordinatorLayout coordinatorlayout = (CoordinatorLayout) findViewById(R.id.coordlayout);
         Snackbar.make(coordinatorlayout, msg,
                 Snackbar.LENGTH_LONG)
                 .show();
     }
 
-
-
-    private void updateUI(String nomeContato)
-    {
+    private void updateUI(String nomeContato) {
 
         contatos.clear();
 
-        if (nomeContato==null) {
+        if (nomeContato == null) {
             contatos.addAll(cDAO.buscaTodosContatos());
             empty.setText(getResources().getString(R.string.lista_vazia));
             fab.show();
 
-        }
-        else {
+        } else {
             contatos.addAll(cDAO.buscaContato(nomeContato));
             empty.setText(getResources().getString(R.string.contato_nao_encontrado));
             fab.hide();
@@ -196,7 +202,7 @@ public class MainActivity extends AppCompatActivity{
 
         recyclerView.getAdapter().notifyDataSetChanged();
 
-        if (recyclerView.getAdapter().getItemCount()==0)
+        if (recyclerView.getAdapter().getItemCount() == 0)
             empty.setVisibility(View.VISIBLE);
         else
             empty.setVisibility(View.GONE);
@@ -204,18 +210,21 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void setupRecyclerView() {
-
-
         adapter.setClickListener(new ContatoAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(int position) {
-                final Contato contato = contatos.get(position);
+            public void onItemClick(Contato contato) {
                 Intent i = new Intent(getApplicationContext(), DetalheActivity.class);
                 i.putExtra("contato", contato);
                 startActivityForResult(i, 2);
             }
-        });
 
+            @Override
+            public void onFavoriteClick(Contato contato) {
+                contato.setFavorito(!contato.isFavorito());
+                cDAO.favoritar(contato);
+                recyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
@@ -234,7 +243,6 @@ public class MainActivity extends AppCompatActivity{
 
                 }
             }
-
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
@@ -256,7 +264,6 @@ public class MainActivity extends AppCompatActivity{
                 }
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
-
 
 
         };

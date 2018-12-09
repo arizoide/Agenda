@@ -1,4 +1,5 @@
 package br.edu.ifspsaocarlos.agenda.data;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -10,12 +11,14 @@ class SQLiteHelper extends SQLiteOpenHelper {
     static final String KEY_NAME = "nome";
     static final String KEY_FONE = "fone";
     static final String KEY_EMAIL = "email";
-    private static final int DATABASE_VERSION = 1;
+    static final String KEY_FAVORITO = "favorito";
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_CREATE = "CREATE TABLE "+ DATABASE_TABLE +" (" +
             KEY_ID  +  " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             KEY_NAME + " TEXT NOT NULL, " +
             KEY_FONE + " TEXT, "  +
-            KEY_EMAIL + " TEXT);";
+            KEY_EMAIL + " TEXT, " +
+            KEY_FAVORITO + " INTEGER);";
 
     SQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -28,6 +31,13 @@ class SQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int    newVersion) {
+        if(oldVersion < 2) {
+            String sql= "ALTER TABLE " + DATABASE_TABLE + " ADD COLUMN " + KEY_FAVORITO + " INTEGER";
+            database.execSQL(sql);
+            ContentValues values = new ContentValues();
+            values.put(SQLiteHelper.KEY_FAVORITO, Boolean.FALSE);
+            database.update(SQLiteHelper.DATABASE_TABLE, values, null, null);
+        }
     }
 }
 

@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import br.edu.ifspsaocarlos.agenda.model.Contato;
@@ -37,7 +38,9 @@ public class ContatoAdapter extends RecyclerView.Adapter<ContatoAdapter.ContatoV
 
     @Override
     public void onBindViewHolder(ContatoViewHolder holder, int position) {
-       holder.nome.setText(contatos.get(position).getNome());
+        Contato contato  = contatos.get(position);
+        holder.nome.setText(contato.getNome());
+        holder.imgFavorite.setImageResource(contato.isFavorito() ? R.drawable.ic_brightness_7_black_24dp : R.drawable.ic_brightness_5_black_24dp);
     }
 
     @Override
@@ -53,24 +56,36 @@ public class ContatoAdapter extends RecyclerView.Adapter<ContatoAdapter.ContatoV
 
     public  class ContatoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         final TextView nome;
+        final ImageView imgFavorite;
 
         ContatoViewHolder(View view) {
             super(view);
-            nome = (TextView)view.findViewById(R.id.nome);
+            nome = view.findViewById(R.id.nome);
+            imgFavorite = view.findViewById(R.id.imgFavorite);
             view.setOnClickListener(this);
+            imgFavorite.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-
-            if (clickListener != null)
-                clickListener.onItemClick(getAdapterPosition());
+            Contato contato = contatos.get(getAdapterPosition());
+            if(view == imgFavorite) {
+                if (clickListener != null) {
+                    clickListener.onFavoriteClick(contato);
+                }
+            } else {
+                if (clickListener != null) {
+                    clickListener.onItemClick(contato);
+                }
+            }
         }
     }
 
 
     public interface ItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(Contato contato);
+
+        void onFavoriteClick(Contato contato);
     }
 
 }
