@@ -90,7 +90,7 @@ public class ContatoDAO {
 
         String[] cols = new String[]{SQLiteHelper.KEY_ID, SQLiteHelper.KEY_NAME, SQLiteHelper.KEY_FONE, SQLiteHelper.KEY_EMAIL, SQLiteHelper.KEY_FAVORITO, SQLiteHelper.KEY_FONE_ADICIONAL, SQLiteHelper.KEY_EMAIL_ADICIONAL};
         String where = SQLiteHelper.KEY_NAME + " LIKE ? OR " + SQLiteHelper.KEY_EMAIL + " LIKE ? OR " + SQLiteHelper.KEY_EMAIL_ADICIONAL + " LIKE ?";
-        String[] argWhere = new String[] {texto + "%", "%" + texto + "%"};
+        String[] argWhere = new String[] {texto + "%", "%" + texto + "%", "%" + texto + "%"};
 
 
         cursor = database.query(SQLiteHelper.DATABASE_TABLE, cols, where, argWhere,
