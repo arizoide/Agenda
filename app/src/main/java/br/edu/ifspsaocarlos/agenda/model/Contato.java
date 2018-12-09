@@ -9,6 +9,7 @@ public class Contato implements Serializable {
     private String fone;
     private String foneAdicional;
     private String email;
+    private String emailAdicional;
     private boolean favorito;
 
     public Contato() {
@@ -60,6 +61,14 @@ public class Contato implements Serializable {
 
     public void setFoneAdicional(String foneAdicional) {
         this.foneAdicional = foneAdicional;
+    }
+
+    public String getEmailAdicional() {
+        return emailAdicional;
+    }
+
+    public void setEmailAdicional(String emailAdicional) {
+        this.emailAdicional = emailAdicional;
     }
 }
 
